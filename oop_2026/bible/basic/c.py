@@ -18,9 +18,7 @@ class Car:
         """
         Place new wheel at the given position. The previous wheel will be returned.
         """
-
-        if position not in self.wheel_positions:
-            raise ValueError(f'Invalid wheel position; allowed positions: {self.wheel_positions}')
+        self._check_position(position)
 
         if position not in self.wheels:
             self.wheels[position] = wheel
@@ -29,8 +27,13 @@ class Car:
         self.wheels[position] = wheel
         return removed
 
-    def get_wheel(self, position: str) -> Wheel:
+    def get_wheel(self, position: str) -> Wheel | None:
+        self._check_position(position)
         return self.wheels[position]
+
+    def _check_position(self, position: str):
+        if position not in self.wheel_positions:
+            raise ValueError(f'Invalid wheel position. Allowed wheel positions: {self.wheel_positions}')
 
     def __repr__(self):
         res = f"Car {self.type}\nWheels:\n"
@@ -47,7 +50,7 @@ if __name__ == '__main__':
     car.change_wheel('RR', Wheel('C', 3.5))
 
     car.change_wheel('RR', Wheel('B', 3.2))
-    car.change_wheel('RRR', Wheel('B', 3.2))
-    print(car.get_wheel('RR'))
+    # car.change_wheel('RRR', Wheel('B', 3.2))
+    print(car.get_wheel('RRR'))
     print('----')
     print(car)
