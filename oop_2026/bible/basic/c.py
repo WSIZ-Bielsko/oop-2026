@@ -51,6 +51,8 @@ if __name__ == '__main__':
 
     car.change_wheel('RR', Wheel('B', 3.2))
     # car.change_wheel('RRR', Wheel('B', 3.2))
-    print(car.get_wheel('RRR'))
+    # print(car.get_wheel('RRR'))
     print('----')
     print(car)
+    car.change_wheel('LR', 'this is a wheel')
+
