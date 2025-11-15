@@ -20,12 +20,26 @@ class Rectangle(Shape):
         return 1.0 * self.width * self.height
 
 
-class Circle(Shape):
-    def __init__(self, radius):
-        self.radius = radius
+class Square(Rectangle):
+    def __init__(self, width):
+        super().__init__(width, width)
+        self.width = width
+
+    # not needed -- will follow from super()
+
+
+class Ellipse(Shape):
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
 
     def get_area(self) -> float:
-        return 1.0 * self.radius * self.radius * math.pi
+        return self.a * self.b * 3.14159
+
+
+class Circle(Ellipse):
+    def __init__(self, radius):
+        super().__init__(radius, radius)
 
 
 class Triangle(Shape):
@@ -50,3 +64,6 @@ if __name__ == '__main__':
 
     tri = Triangle(3, 4, 5)
     print(tri.get_area())
+
+    sq = Square(3)
+    print(sq.get_area())  # works -> 9
