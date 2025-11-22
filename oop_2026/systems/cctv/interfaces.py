@@ -27,13 +27,13 @@ class ThreatEvaluator:
 
 class ThreatMonitor:
     # observes ThreatLevels over time
-    pass
+    @abstractmethod
+    def append_vision(self, vision: TextVision):
+        pass
 
 
 class AlarmAction:
     # how to react to certain threats
+    @abstractmethod
     def react(self, threat_level: ThreatLevel):
         pass
-
-
-
