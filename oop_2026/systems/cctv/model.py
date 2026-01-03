@@ -1,3 +1,4 @@
+from oop_2026.systems.cctv.heat.image_tools import heatmap_to_text
 from oop_2026.systems.cctv.interfaces import TextVision, ThreatLevel, ThreatEvaluator, ThreatMonitor, AlarmAction
 
 
@@ -7,6 +8,20 @@ class OneDVision(TextVision):
 
     def get(self) -> str:
         return self.line
+
+
+class TwoDVision(TextVision):
+
+    def __init__(self, matrix: list[str], threshold: int = 3):
+        """If at least `threshold` `*` in one column -> project it to `*` in 1d; else use ` ` in 1D"""
+        self.threshold = threshold
+        for s in matrix:
+            assert len(s) == len(matrix[0])
+        self.matrix = matrix
+
+    def get(self) -> str:
+        counts = [col.count('*') for col in zip(*self.matrix)]
+        return ''.join(['*' if val >= self.threshold else ' ' for val in counts])
 
 
 class TwoLevelThreat(ThreatLevel):
@@ -76,20 +91,45 @@ if __name__ == '__main__':
     vision3 = ' **               '
 
     evaluator = SimpleEvaluator()
+    print(evaluator.evaluate(OneDVision(vision0)))
     print(evaluator.evaluate(OneDVision(vision1)))
     print(evaluator.evaluate(OneDVision(vision2)))
     print(evaluator.evaluate(OneDVision(vision3)))
+    #
+    # monitor = AlertSentinel(evaluator)
+    # monitor.register_alarm(TwoLevelThreat(1), LigthOnAction())
+    # monitor.register_alarm(TwoLevelThreat(2), SirenAction())
+    #
+    # print('---')
+    # monitor.append_vision(OneDVision(vision0))
+    # print('---')
+    # monitor.append_vision(OneDVision(vision1))
+    # print('---')
+    # monitor.append_vision(OneDVision(vision2))
+    # print('---')
+    # monitor.append_vision(OneDVision(vision3))
+    # print('---')
 
-    monitor = AlertSentinel(evaluator)
-    monitor.register_alarm(TwoLevelThreat(1), LigthOnAction())
-    monitor.register_alarm(TwoLevelThreat(2), SirenAction())
+    print('------' * 5)
 
-    print('---')
-    monitor.append_vision(OneDVision(vision0))
-    print('---')
-    monitor.append_vision(OneDVision(vision1))
-    print('---')
-    monitor.append_vision(OneDVision(vision2))
-    print('---')
-    monitor.append_vision(OneDVision(vision3))
-    print('---')
+    v = [
+        '   **',
+        '  ** ',
+        ' ****',
+        ' * **',
+    ]
+    for ll in v:
+        print(ll)
+
+    two_d = TwoDVision(v, threshold=3)
+    print(f'{two_d.get()}]')
+    print(evaluator.evaluate(two_d))
+    print('------' * 5)
+
+    # vis = heatmap_to_text('heat/image.png')
+    vis = heatmap_to_text('heat/image2.png')
+    for line in vis:
+        print(line)
+    gg2d = TwoDVision(vis)
+    print(f'{gg2d.get()}]')
+    print(evaluator.evaluate(gg2d))

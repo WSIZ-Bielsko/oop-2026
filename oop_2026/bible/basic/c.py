@@ -1,5 +1,4 @@
 class Wheel:
-
     def __init__(self, rim: str, tyre: float):
         self.rim = rim
         self.tyre = tyre
@@ -55,4 +54,3 @@ if __name__ == '__main__':
     print('----')
     print(car)
     car.change_wheel('LR', 'this is a wheel')
-
