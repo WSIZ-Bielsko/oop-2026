@@ -6,6 +6,7 @@ import os
 
 from dotenv import load_dotenv
 from openai import OpenAI
+from openai.cli._api.files import CLIFile
 from openai.types import FileObject
 from loguru import logger
 
@@ -28,7 +29,7 @@ def upload_input_file(client, file_name: str, purpose="batch") -> FileObject:
     :param purpose: "batch" or "user_data"
     :return:
     """
-    input_file = client.files.create(
+    input_file: FileObject = client.files.create(
         file=open(file_name, "rb"),
         purpose=purpose
     )

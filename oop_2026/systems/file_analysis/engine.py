@@ -9,3 +9,6 @@ class FileAnalysisEngine:
     def analyze(self, prompt, file_id) -> str:
         """Executes a prompt using info from file uploaded earlier."""
 
+
+class AiClientError(Exception):
+    pass
