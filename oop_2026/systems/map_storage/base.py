@@ -1,5 +1,6 @@
 from abc import abstractmethod, ABC
 from collections.abc import *
+from time import sleep
 
 
 # MutableMapping
@@ -22,7 +23,10 @@ class MapStorage(ABC):
         pass
 
     def __repr__(self):
-        pass
+        s = []
+        for k in self.keys():
+            s.append(f'{k}: {self.__getitem__(k)}')
+        return '{' + ', '.join(s) + '}'
 
 
 # first implementation
@@ -41,20 +45,43 @@ class DictStorage(MapStorage):
         return len(self.data)
 
     def keys(self):
-        return self.data.keys()
+        return sorted(self.data.keys())
 
-    def __repr__(self):
-        s = []
-        for k in self.keys():
-            s.append(f'{k}: {self[k]}')
-        return '{' + ' '.join(s) + '}'
+
+class BlockStorage(MapStorage):
+
+    def __init__(self):
+        self.data = []  # [ [1,'kadabra'], [2, 'xiao'] ]
+
+    def __getitem__(self, key):
+        for block in self.data:
+            if block[0] == key:
+                return block[1]
+        return None
+
+    def __setitem__(self, key, value):
+        # pass thru all pairs in self.data
+        # if key found --> update value
+        # if not found --> just append [key,value] to self.data
+        for element in self.data:
+            if element[0] == key:
+                element[1] = value
+                return
+        self.data.append([key, value])
+
+    def __len__(self):
+        # just return the length of self.data
+        return len(self.data)
+
+    def keys(self):
+        # pass thru all data in self.data; gather the item[0] elements (the keys) in some list...
+        key_array = []
+        for block in self.data:
+            key_array.append(block[0])
+        return key_array
 
 
 
 if __name__ == '__main__':
-    d: dict[int, str] = DictStorage()
-    d[11] = 'kadabra'
-    d[2] = 'xiao'
-
-    d[1] = d[11] + '---'
-    print(d)
+    # d: dict[int, str] = DictStorage()
+    pass
