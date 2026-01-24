@@ -1,5 +1,6 @@
-def first[T](items: list[T]) -> T | None:
-    return items[0] if items else None
+def first[T](items: list[T]) -> T:
+    print(type(items[0]))
+    return items[0]
 
 
 if __name__ == '__main__':
@@ -7,3 +8,11 @@ if __name__ == '__main__':
 
     result2 = first(['ab', 'cd'])
     print(result2.upper())
+
+    first([3.14, 1.41])
+
+    first([1, 1.12])
+
+    # tuple[int] ... (1) .... (1,1,1);;; tuple[int,...]
+    w = (1, 2)
+    print(w)
