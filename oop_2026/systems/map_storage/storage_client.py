@@ -18,7 +18,7 @@ class WebMapStorage(MapStorage):
     def __setitem__(self, key, value):
         response = requests.post(
             f"{self.base_url}/items",
-            json={"key": key, "value": value}
+            json={"key": str(key), "value": str(value)}
         )
         response.raise_for_status()
 
@@ -31,6 +31,10 @@ class WebMapStorage(MapStorage):
         response = requests.get(f"{self.base_url}/keys")
         response.raise_for_status()
         return response.json()["keys"]
+
+    def clear(self):
+        response = requests.delete(f"{self.base_url}/clear")
+        response.raise_for_status()
 
 
 if __name__ == '__main__':

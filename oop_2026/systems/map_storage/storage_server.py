@@ -5,7 +5,7 @@ from typing import Any
 import uvicorn
 from loguru import logger
 
-from oop_2026.systems.map_storage.base import DictStorage
+from oop_2026.systems.map_storage.storage_dict_and_list import DictStorage
 
 # FastAPI app
 app = FastAPI()
@@ -40,6 +40,13 @@ def get_length():
 @app.get("/keys")
 def get_keys():
     return {"keys": list(storage.keys())}
+
+
+@app.delete("/clear")
+def get_keys():
+    storage.clear()
+    logger.info("Cleared storage")
+    return {"status": "ok"}
 
 
 if __name__ == "__main__":
