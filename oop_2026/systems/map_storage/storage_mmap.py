@@ -43,8 +43,46 @@ class MMapedStorage(MapStorage):
         return super().__repr__()
 
 
+class NumpyMemStorage(MapStorage):
+    def __init__(self, max_items=10000):
+        # assumes keys are ints
+        self.mm = np.zeros(max_items, dtype=np.int32)
+        self.max_items = max_items
+        self.used_keys = np.zeros(max_items, dtype=np.bool_)
+
+    def __validate_key(self, key):
+        if not isinstance(key, int):
+            raise TypeError(f"Key must be int, got {type(key)}")
+        if key >= self.max_items:
+            raise KeyError(f"Key {key} is out of range (max {self.max_items - 1})")
+
+    def __getitem__(self, key):
+        self.__validate_key(key)
+        if not self.used_keys[key]:
+            raise KeyError(key)
+        return self.mm[key]
+
+    def __setitem__(self, key, value):
+        self.__validate_key(key)
+        self.mm[key] = value
+        self.used_keys[key] = True
+
+    def __len__(self):
+        return self.used_keys.sum()
+
+    def keys(self):
+        return np.where(self.used_keys)[0].tolist()
+
+    def clear(self):
+        self.mm[:] = 0
+        self.used_keys[:] = False
+
+    def __repr__(self):
+        return super().__repr__()
+
+
 if __name__ == '__main__':
-    d = MMapedStorage()
+    d = NumpyMemStorage()
     d[1] = 8
     d[2] = 12
     d[2] = 1
